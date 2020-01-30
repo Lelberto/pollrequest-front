@@ -18,6 +18,7 @@ type pollChoice = {
 };
 
 export class Poll {
+    _id?: string | null;
     title: string;
     author: User;
     options: pollOptions;

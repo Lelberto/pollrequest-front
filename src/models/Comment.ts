@@ -2,6 +2,7 @@ import { User } from "./User";
 import { Poll } from "./Poll";
 
 export class Comment {
+    _id?: string | null;
     author: User;
     poll: Poll;
     content: string;
