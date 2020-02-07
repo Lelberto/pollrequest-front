@@ -1,6 +1,6 @@
 import config from '../../configs/config.json';
 import { ConfigType } from '../../shared/types/configType.js';
-import { ResponseType } from '../../shared/types/responseType';
+// import { ResponseType } from '../../shared/types/responseType';
 import { getItem } from '../localStorageService';
 
 export default class HttpService {
@@ -30,17 +30,27 @@ export default class HttpService {
                         init = {
                             ...init,
                             headers: {
-                                'X-ACCESS-TOKEN': token
+                                'X-ACCESS-TOKEN': token,
+                                'Content-Type': 'multipart/form-data'
                             }
                         }
                     }
                 })
         }
-        await fetch(`${this._config.API_URL}${routePrefix}`, init)
-            .then((response: ResponseType | null) => {
-                if (response) {
-                    // Manage errors here with a httpErrorService.ts
+
+        return await fetch(`${this._config.API_URL}${routePrefix}`, init)
+            .then((resp: Response) => {
+                if (resp.ok !== false) {
+                    // Manage network errors here with a httpErrorService.ts
+                    console.log(resp)
+                    return resp;
+                } else {
+                    // Manage error handling
+                    console.log('error');
                 }
+            })
+            .catch((resp: any) => {
+                console.log(resp.statusText)
             })
     }
 }

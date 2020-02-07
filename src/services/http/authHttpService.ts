@@ -14,15 +14,16 @@ export class AuthHttpService extends HttpService {
         // Initialize request options.
         const init: RequestInit = {
             method: 'POST',
-            body: JSON.stringify({
-                email: user.email,
-                name: user.name,
-                password: user.password,
-            })
+            body: new URLSearchParams(`email=${user.email}&name=${user.name}&password=${user.password}`)
         };
 
-        this.makeHttpReq(`${this.routePrefix}/signup`, init, false)
-        // Manage promise return.
+        return await this.makeHttpReq(`${this.routePrefix}/signup`, init, false)
+            .then((resp: Response) => {
+                if (resp) {
+                    // Check custom errors
+                    return resp;
+                }
+            })
     }
 
     /**
@@ -36,13 +37,15 @@ export class AuthHttpService extends HttpService {
         //Initialize request options.
         const init: RequestInit = {
             method: 'POST',
-            body: JSON.stringify({
-                email: user.email,
-                password: user.password,
-            })
+            body: new URLSearchParams(`email=${user.email}&password=${user.password}`)
         };
 
-        this.makeHttpReq(`${this.routePrefix}/signin`, init, false);
+        return await this.makeHttpReq(`${this.routePrefix}/signin`, init, false)
+            .then((resp: Response) => {
+                if (resp) {
+                    return resp;
+                }
+            })
         // Manage promise return.
     }
 }
