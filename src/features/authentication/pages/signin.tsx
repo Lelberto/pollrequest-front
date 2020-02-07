@@ -18,8 +18,12 @@ export class SignInPage extends Component {
 
     submit(loginData: LoginFormData) {
         let user = new User(loginData.email, loginData.password);
-        this.authService.signIn(user);
-        // Manage return promise
+        this.authService.signIn(user)
+            .then((resp: Response) => {
+                if (resp) {
+                    console.log('Connected!');
+                }
+            })
     }
 
     render() {
