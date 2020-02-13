@@ -8,7 +8,7 @@ import { User } from '../../../models/User';
 type LoginFormData = {
     email: string,
     password: string
-}
+};
 
 /**
  * Signin page.
@@ -19,9 +19,9 @@ export class SignInPage extends Component {
     submit(loginData: LoginFormData) {
         let user = new User(loginData.email, loginData.password);
         this.authService.signIn(user)
-            .then((resp: Response) => {
+            .then((resp: boolean) => {
                 if (resp) {
-                    console.log('Connected!');
+                    // Naviguate to the main app page
                 }
             })
     }

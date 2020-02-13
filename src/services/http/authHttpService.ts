@@ -1,5 +1,21 @@
 import HttpService from "./httpService";
 import { User } from "../../models/User";
+import { saveItem } from '../../services/localStorageService';
+import config from '../../configs/config.json';
+
+type SignInResponseData = {
+    id: string,
+    accessToken: string,
+    refreshToken: string,
+}
+
+type SignUpResponseData = {
+    links: Array<{
+        rel: string,
+        href: string
+    }>,
+    id: string
+}
 
 export class AuthHttpService extends HttpService {
     private routePrefix = '/auth';
@@ -18,11 +34,12 @@ export class AuthHttpService extends HttpService {
         };
 
         return await this.makeHttpReq(`${this.routePrefix}/signup`, init, false)
-            .then((resp: Response) => {
+            .then((resp: SignUpResponseData) => {
                 if (resp) {
-                    // Check custom errors
-                    return resp;
+                    // Check custom errors (httpErrorService)
+                    return true;
                 }
+                return false;
             })
     }
 
@@ -41,11 +58,18 @@ export class AuthHttpService extends HttpService {
         };
 
         return await this.makeHttpReq(`${this.routePrefix}/signin`, init, false)
-            .then((resp: Response) => {
+            .then(async (resp: SignInResponseData) => {
                 if (resp) {
-                    return resp;
+                    // Save both access and refresh tokens in localStorage
+
+                    if (resp.accessToken && resp.refreshToken) {
+                        saveItem(config.ACCESS_TOKEN_STORAGE_KEY, resp.accessToken);
+                        saveItem(config.REFRESH_TOKEN_STORAGE_KEY, resp.refreshToken);
+
+                        return true;
+                    }
+                    return false;
                 }
             })
-        // Manage promise return.
-    }
+        }
 }

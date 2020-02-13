@@ -1,6 +1,5 @@
 import config from '../../configs/config.json';
 import { ConfigType } from '../../shared/types/configType.js';
-// import { ResponseType } from '../../shared/types/responseType';
 import { getItem } from '../localStorageService';
 
 export default class HttpService {
@@ -40,16 +39,22 @@ export default class HttpService {
 
         return await fetch(`${this._config.API_URL}${routePrefix}`, init)
             .then((resp: Response) => {
-                if (resp.ok !== false) {
-                    // Manage network errors here with a httpErrorService.ts
-                    console.log(resp)
-                    return resp;
+                if (resp.status) {
+                    const errorPrefix = String(resp.status).substring(0, 1);
+                    if (errorPrefix === "4" || errorPrefix === "5") {
+                        // Manage errors (httpErrorService wip)
+                    } else if (errorPrefix === "2") {
+                        return resp.json();
+                    } else {
+                        // Manage errors (httpErrorService wip)
+                    }
                 } else {
-                    // Manage error handling
+                    // Manage errors (httpErrorService wip)
                     console.log('error');
                 }
             })
             .catch((resp: any) => {
+                // Manage errors (httpErrorService wip)
                 console.log(resp.statusText)
             })
     }

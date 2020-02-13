@@ -27,7 +27,7 @@ export class SignUpPage extends Component {
         let user = new User(formData.email, formData.password);
         user.name = formData.name; 
         this.authService.signUp(user)
-            .then((resp: Response) => {
+            .then((resp: boolean) => {
                 // Manage resp
                 if (resp) {
                     // Redirect on signin page
