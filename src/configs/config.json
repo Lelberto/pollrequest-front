@@ -1,5 +1,5 @@
 {
-    "API_URL": "http://localhost:8100",
+    "API_URL": "http://localhost",
     "ACCESS_TOKEN_STORAGE_KEY": "accessToken",
     "REFRESH_TOKEN_STORAGE_KEY": "refreshToken"
 }
