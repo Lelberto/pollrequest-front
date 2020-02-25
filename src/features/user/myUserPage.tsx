@@ -111,7 +111,7 @@ export class MyUserPage extends React.Component<{}, stateUser> {
                 break;
 
             default:
-                console.log("T'as R dans le switch");
+                break;
         }
     };
 
@@ -123,7 +123,6 @@ export class MyUserPage extends React.Component<{}, stateUser> {
     handleSubmit = () => {
         if (this.state.response.user != null) {
             if ((this.state.response.user.password === this.state.response.user.confirmPassword) || (this.state.response.user.password == undefined && this.state.response.user.confirmPassword == undefined)) {
-                console.log("merde");
                 const { _id, email, name, password } = this.state.response.user;
                 const user = new User(email, password);
 
