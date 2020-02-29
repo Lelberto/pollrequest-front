@@ -1,5 +1,5 @@
 import { UserHttpService } from "../../services/http/userHttpService";
-import { Grid, Header, Form, Segment, Button, Label } from "semantic-ui-react";
+import { Grid, Header, Form, Segment, Button } from "semantic-ui-react";
 import React from "react";
 import { ResponseUserLinksData, User } from "../../models/User";
 
@@ -122,7 +122,7 @@ export class MyUserPage extends React.Component<{}, stateUser> {
      */
     handleSubmit = () => {
         if (this.state.response.user != null) {
-            if ((this.state.response.user.password === this.state.response.user.confirmPassword) || (this.state.response.user.password == undefined && this.state.response.user.confirmPassword == undefined)) {
+            if ((this.state.response.user.password === this.state.response.user.confirmPassword) || (this.state.response.user.password === undefined && this.state.response.user.confirmPassword === undefined)) {
                 const { _id, email, name, password } = this.state.response.user;
                 const user = new User(email, password);
 
@@ -135,8 +135,6 @@ export class MyUserPage extends React.Component<{}, stateUser> {
     }
 
     render() {
-        const errorLabel = <Label color="red" pointing />
-
         if (this.state.response.user != null) {
             const { email, name } = this.state.response.user;
 
@@ -158,12 +156,6 @@ export class MyUserPage extends React.Component<{}, stateUser> {
                                     icon="user"
                                     iconPosition="left"
                                     onChange={this.handleChange}
-                                    // validations="isEmail"
-                                    // validationerrors={{
-                                    //     isEmail: 'Email not valid',
-                                    //     isDefaultRequiredValue: 'Email is required'
-                                    // }}
-                                    // errorlabel={errorLabel}
                                 />
                                 <Form.Input
                                     name="name"
@@ -173,17 +165,6 @@ export class MyUserPage extends React.Component<{}, stateUser> {
                                     icon="user"
                                     iconPosition="left"
                                     onChange={this.handleChange}
-                                    // validations={{
-                                    //     minLength: 3,
-                                    //     maxLength: 30
-                                    // }}
-                                    // validationerrors={{
-                                    //     isEmptyString: 'Name can\'t be empty',
-                                    //     minLength: 'Minimum of 3 characters',
-                                    //     maxLength: 'Maximum of 30 characters',
-                                    //     isDefaultRequiredValue: 'Name is required'
-                                    // }}
-                                    // errorlabel={errorLabel}
                                 />
                                 <Form.Input
                                     name="password"
@@ -194,21 +175,6 @@ export class MyUserPage extends React.Component<{}, stateUser> {
                                     placeholder="Password"
                                     onChange={this.handleChange}
                                     type="password"
-                                    // validations={{
-                                    //     comparePass: (values: UpdateUserFormData, value: string) => {
-                                    //         if (values.confirmPassword && values.confirmPassword.length > 8) {
-                                    //             return values.confirmPassword === value ? true : false
-                                    //         }
-                                    //         return true
-                                    //     },
-                                    //     minLength: 8
-                                    // }}
-                                    // validationerrors={{
-                                    //     minLength: 'Minimum of 8 characters',
-                                    //     isDefaultRequiredValue: 'Password is required',
-                                    //     comparePass: 'Passwords aren\'t the same'
-                                    // }}
-                                    // errorlabel={errorLabel}
                                 />
                                 <Form.Input
                                     name="confirmPassword"
@@ -219,27 +185,11 @@ export class MyUserPage extends React.Component<{}, stateUser> {
                                     placeholder="Confirm Password"
                                     onChange={this.handleChange}
                                     type="password"
-                                    // validations={{
-                                    //     comparePass: (values: UpdateUserFormData, value: string) => {
-                                    //         if (values.password && values.password.length > 8) {
-                                    //             return values.password === value ? true : false
-                                    //         }
-                                    //         return true
-                                    //     },
-                                    //     minLength: 8
-                                    // }}
-                                    // validationerrors={{
-                                    //     minLength: 'Minimum of 8 characters',
-                                    //     isDefaultRequiredValue: 'Password is required',
-                                    //     comparePass: 'Passwords aren\'t the same'
-                                    // }}
-                                    // errorlabel={errorLabel}
                                 />
                                 <Button
                                     color="blue"
                                     fluid
                                     size="large"
-                                    //type="submit">
                                     onClick={this.handleSubmit}>
                                     Mettre à jour
                                 </Button>

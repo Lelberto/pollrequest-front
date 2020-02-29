@@ -1,27 +1,14 @@
 import HttpService from './httpService';
 import { User, ResponseUserLinksData, UserData } from '../../models/User';
 
-
-
 export class UserHttpService extends HttpService {
     private routePrefix = '/users';
 
-    // /**
-    //  * Gets the user from a provided token
-    //  * 
-    //  * @param user 
-    //  * @return Promise<any>
-    //  */
-    // public async getMyUser(): Promise<ResponseUserLinksData> {
-
-    //     // Initialize request options.
-    //     const init: RequestInit = {
-    //         method: 'GET'
-    //     };
-
-    //     return await this.makeHttpReq(`${this.routePrefix}/me`, init, true); 
-    // }
-
+    /**
+     * Gets the user from a provided token.
+     * 
+     * @returns Promise<ResponseUserLinksData>
+     */
     public async getMyUser(): Promise<ResponseUserLinksData> {
 
         // Initialize request options.
@@ -34,16 +21,17 @@ export class UserHttpService extends HttpService {
         try {
             if (resp) {
                 return resp;
-            }            
+            }
         } catch (err) {
+            console.log(err);
         }
     }
 
 
     /**
-     * Gets all users
+     * Gets all users.
      * 
-     * @returns Promise<any>
+     * @returns Promise<UserData[]>
      */
     public async getAllUsers(): Promise<UserData[]> {
         // Initialize request options.
@@ -55,10 +43,10 @@ export class UserHttpService extends HttpService {
     }
 
     /**
-     * Gets a specific user
+     * Gets a specific user.
      * 
      * @param user 
-     * @returns Promise<any>
+     * @returns Promise<UserData>
      */
     public async getUser(user: User): Promise<UserData> {
         // Initialize request options.
@@ -70,10 +58,10 @@ export class UserHttpService extends HttpService {
     }
 
     /**
-     * Updates an user
+     * Updates a user.
      * 
      * @param user 
-     * @returns  Promise<any>
+     * @returns  Promise<UserData>
      */
     public async updateUser(user: User): Promise<UserData> {
         // Initialize request options.
@@ -90,23 +78,24 @@ export class UserHttpService extends HttpService {
         if (user.name !== undefined) {
             if (data !== ``) {
                 data += `&name=${user.name}`;
-            }else {
+            } else {
                 data = `name=${user.name}`;
             }
         }
 
         if (user.password !== undefined) {
-            console.log(user.password)
             if (data !== ``) {
                 data += `&password=${user.password}`;
-            }else {
+            } else {
                 data = `password=${user.password}`;
             }
         }
 
         const init: RequestInit = {
             method: 'PATCH',
-            body: new URLSearchParams(data)
+            body: {
+                data
+            } as any
         };
 
         return await this.makeHttpReq(`${this.routePrefix}/${user._id}`, init, false);
