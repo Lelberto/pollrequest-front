@@ -21,41 +21,43 @@ export default class HttpService {
      * @return Promise<any>
      */
     protected async makeHttpReq(routePrefix: string, init: RequestInit, isTokenRequired: boolean): Promise<any> {
-        if (isTokenRequired) {
-            // Get the stored token.
-            await getItem(this._config.ACCESS_TOKEN_STORAGE_KEY)
-                .then((token: string | null) => {
-                    if (token) {
-                        init = {
-                            ...init,
-                            headers: {
-                                'X-ACCESS-TOKEN': token,
-                                'Content-Type': 'multipart/form-data'
-                            }
+
+        // Stock the token on 
+        try {
+            if (isTokenRequired) {
+                // Get the stored token.
+                const token = await getItem(this._config.ACCESS_TOKEN_STORAGE_KEY);
+                if (token) {
+                    init = {
+                        ...init,
+                        headers: {
+                            'x-access-token': token,
+                            'Content-Type': 'multipart/form-data'
                         }
                     }
-                })
+                }
+            }
+        } catch (err) {
+            console.log(err);
         }
 
-        return await fetch(`${this._config.API_URL}${routePrefix}`, init)
-            .then((resp: Response) => {
-                if (resp.status) {
-                    const errorPrefix = String(resp.status).substring(0, 1);
-                    if (errorPrefix === "4" || errorPrefix === "5") {
-                        // Manage errors (httpErrorService wip)
-                    } else if (errorPrefix === "2") {
-                        return resp.json();
-                    } else {
-                        // Manage errors (httpErrorService wip)
-                    }
+        // Launch road and get his status before sending a json body with all data
+        try {
+            const resp = await fetch(`${this._config.API_URL}${routePrefix}`, init);
+            if (resp.status) {
+                const errorPrefix = String(resp.status).substring(0, 1);
+                if (errorPrefix === "4" || errorPrefix === "5") {
+                    alert("Le serveur retourne une erreur " + resp.status + ".");
+                    // Manage errors (httpErrorService wip)
+                } else if (errorPrefix === "2") {
+                    // All is good.
                 } else {
                     // Manage errors (httpErrorService wip)
-                    console.log('error');
                 }
-            })
-            .catch((resp: any) => {
-                // Manage errors (httpErrorService wip)
-                console.log(resp.statusText)
-            })
+            }
+            return await resp.json();
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
