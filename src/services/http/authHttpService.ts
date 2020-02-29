@@ -3,20 +3,6 @@ import { User } from "../../models/User";
 import { saveItem } from '../../services/localStorageService';
 import config from '../../configs/config.json';
 
-type SignInResponseData = {
-    id: string,
-    accessToken: string,
-    refreshToken: string,
-}
-
-type SignUpResponseData = {
-    links: Array<{
-        rel: string,
-        href: string
-    }>,
-    id: string
-}
-
 export class AuthHttpService extends HttpService {
     private routePrefix = '/auth';
 
@@ -33,14 +19,16 @@ export class AuthHttpService extends HttpService {
             body: new URLSearchParams(`email=${user.email}&name=${user.name}&password=${user.password}`)
         };
 
-        return await this.makeHttpReq(`${this.routePrefix}/signup`, init, false)
-            .then((resp: SignUpResponseData) => {
-                if (resp) {
-                    // Check custom errors (httpErrorService)
-                    return true;
-                }
-                return false;
-            })
+        const resp = await this.makeHttpReq(`${this.routePrefix}/signup`, init, false)
+        try {
+            if (resp) {
+                // Check custom errors (httpErrorService)
+                return true;
+            }
+            return false;
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     /**
@@ -57,19 +45,20 @@ export class AuthHttpService extends HttpService {
             body: new URLSearchParams(`email=${user.email}&password=${user.password}`)
         };
 
-        return await this.makeHttpReq(`${this.routePrefix}/signin`, init, false)
-            .then(async (resp: SignInResponseData) => {
-                if (resp) {
-                    // Save both access and refresh tokens in localStorage
+        const resp = await this.makeHttpReq(`${this.routePrefix}/signin`, init, false);
+        try {
+            if (resp) {
+                // Save both access and refresh tokens in localStorage               
+                if (resp.access_token && resp.refresh_token) {
+                    saveItem(config.ACCESS_TOKEN_STORAGE_KEY, resp.access_token);
+                    saveItem(config.REFRESH_TOKEN_STORAGE_KEY, resp.refresh_token);
 
-                    if (resp.accessToken && resp.refreshToken) {
-                        saveItem(config.ACCESS_TOKEN_STORAGE_KEY, resp.accessToken);
-                        saveItem(config.REFRESH_TOKEN_STORAGE_KEY, resp.refreshToken);
-
-                        return true;
-                    }
-                    return false;
+                    return true;
                 }
-            })
+                return false;
+            }
+        } catch (err) {
+            console.log(err);
         }
+    }
 }
