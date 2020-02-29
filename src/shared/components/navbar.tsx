@@ -18,8 +18,16 @@ export class NavBar extends Component {
                         to='/'
                     />
                     <Menu.Item as={ Link }
-                        name='login'
+                        name='Se connecter'
                         to='/signin'
+                    />
+                    <Menu.Item as={ Link }
+                        name='Mon compte'
+                        to='/account'
+                    />
+                    <Menu.Item as={ Link }
+                        name='Sondages'
+                        to='/polls'
                     />
                 </Menu>
             </div>

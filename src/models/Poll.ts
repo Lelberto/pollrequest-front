@@ -1,39 +1,99 @@
 import { User } from './User';
-import { Comment } from './Comment';
 
-type pollOptions = {
-    multiple: boolean,
-    ipChecking: boolean,
-};
-
-type pollVoter = {
-    ip: string,
-    voter: User,
-};
-
-type pollChoice = {
+export type Poll = {
     _id: string,
-    label: string,
-    voters: pollVoter
-};
+    title: string,
+    author: {
+        id: string,
+        email: string,
+        name: string,
+        password: string,
+        role: User
+    },
+    options: {
+        multiple: true,
+        ipChecking: true
+    },
+    choices: [
+        {
+            id: string,
+            label: string,
+            voters: [
+                {
+                    ip: string,
+                    voter: {
+                        id: string,
+                        email: string,
+                        name: string,
+                        password: string,
+                        role: User
+                    }
+                }
+            ]
+        }
+    ],
+    comments: [
+        {
+            id: string,
+            content: string,
+            author: {
+                id: string,
+                email: string,
+                name: string,
+                password: string,
+                role: User
+            }
+        }
+    ]
+}
 
-export class Poll {
-    _id?: string | null;
-    title: string;
-    author: User;
-    options: pollOptions;
-    choices: Array<pollChoice>;
-    comments?: Array<Comment>;
-
-    constructor(
-        title: string,
-        author: User,
-        options: pollOptions,
-        choices: Array<pollChoice>,
-    ) {
-        this.title = title;
-        this.author = author;
-        this.options = options;
-        this.choices = choices;
+/**
+* Data require for post a poll.
+*/
+export type BasePoll = {
+    id: string,
+    title: string,
+    options: {
+        multiple: true,
+        ipChecking: true
     }
 }
+
+/**
+ * Scheme for a voter in a poll.
+ */
+export type PollUser = {
+    id: string,
+    email: string,
+    name: string,
+    password: string,
+    role: User
+}
+
+/**
+ * Specific way to PATCH a Poll. 
+ */
+export type PostPoll = {
+    title: string,
+    options: {
+        multiple: true,
+        ipChecking: true
+    },
+    choices: Choice[]
+}
+
+/**
+ * Scheme list all choice in a poll.
+ */
+export type Choice = [
+    {
+        id: string,
+        label: string,
+        voters: [
+            {
+                ip: string,
+                voter: PollUser
+            }
+        ]
+    }
+]
