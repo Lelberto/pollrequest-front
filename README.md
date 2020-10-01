@@ -1,2 +1,0 @@
-# pollrequest-front
-PollRequest Front
